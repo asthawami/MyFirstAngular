@@ -1,0 +1,9 @@
+<label>enter something</label>
+<br>
+<input type="text" [(ngModel)]="serverName">
+<!--<p>{{serverName}}</p>-->
+<button  [disabled]="!allowNewServer" (click)="onCreateServer()">App Server</button>
+<!--<p>{{allowNewServer}}</p>-->
+<!--<p>{{serverCreationStatus}}</p>-->
+<p *ngIf="serverCreated">server creted {{serverName}}</p>
+<app-server *ngFor="let server of servers"></app-server>
