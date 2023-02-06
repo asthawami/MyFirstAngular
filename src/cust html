@@ -1,0 +1,84 @@
+<!--
+  @description       : 
+  @author            : Astha Swami
+  @group             : 
+  @last modified on  : 02-06-2023
+  @last modified by  : Astha Swami
+-->
+<template>
+    <template if:true={displayInsight}>
+       <!-- <template if:false={showonBs}>
+            <div class="slds-m-top_x-small slds-m-bottom_x-small divClass slds-card_boundary divInsight">
+                <div class="slds-m-around_small">
+                    <div class="slds-text-heading_small">
+                        abc<lightning-icon icon-name="utility:light_bulb"
+                                        alternative-text="Connected"
+                                        title="Connected"
+                                        size="x-small">
+                        </lightning-icon>
+                        &nbsp; 
+                        <span class="textInsightFont">{label.Insights}</span>
+                    </div>
+
+                    <template if:true={hasInsightAlertData}>
+                        <template for:each={insightAlertData} for:item="item">
+                            <div key={item.id} class="slds-m-top_x-small slds-m-bottom_x-small">
+                                <span> {item.insightAlertText}:</span>
+                                <template if:true={item.insightAlertLink}>
+                                    <template if:true={categoryComp}>
+                                        <lightning-formatted-url value={item.insightAlertLink}
+                                                                 target="_blank"
+                                                                 label={label.Link_to_Document}>
+                                        </lightning-formatted-url>
+                                    </template>
+                                    <template if:true={categoryPersp}>
+                                        <lightning-formatted-url value={item.insightAlertLink}
+                                                                 target="_blank"
+                                                                 label={item.insightAlertLinkDisplayLinkAs}>
+                                        </lightning-formatted-url>
+                                    </template>
+                                </template>
+                            </div>
+                        </template>
+                    </template>
+                </div>
+            </div>
+        </template> -->
+    <!--    <template if:true={showonBs}> -->
+                <div class="divInsight">
+                    <div class="divCustom">
+                        <div class="insight">
+                            <lightning-icon icon-name="utility:light_bulb"
+                                            alternative-text="Connected"
+                                            title="Connected"
+                                            size="x-small">
+                            </lightning-icon>
+                            <span> {label.Insights}</span>
+                        </div>
+                        <div class="alertData">
+                            <template if:true={hasInsightAlertData}>
+                                <template for:each={insightAlertData} for:item="item">
+                                    <div key={item.Id} class="insightAlert">
+                                        <span> {item.insightAlertText} : </span>
+                                        <template if:true={item.insightAlertLink}>
+                                            <template if:true={categoryComp}>
+                                                <lightning-formatted-url value={item.insightAlertLink}
+                                                                         target="_blank"
+                                                                         label={label.Link_to_Document}>
+                                                </lightning-formatted-url>
+                                            </template>
+                                            <template if:true={categoryPersp}>
+                                                <lightning-formatted-url value={item.insightAlertLink}
+                                                                         target="_blank"
+                                                                         label={item.insightAlertLinkDisplayLinkAs}>
+                                                </lightning-formatted-url>
+                                            </template>
+                                        </template>
+                                    </div>
+                                </template>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+    </template>
+</template>
