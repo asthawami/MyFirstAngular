@@ -1,0 +1,126 @@
+import { LightningElement, track, api } from "lwc";
+//labels
+import Insights from "@salesforce/label/c.Insights";
+import Link_to_Document from "@salesforce/label/c.Link_to_Document";
+import categoryCompetitor from "@salesforce/label/c.CategoryCompetitor";
+import categoryPerspective from "@salesforce/label/c.CategoryPerspective";
+//apex
+import fetchInsights from "@salesforce/apex/TeamController.fetchInsights";
+import getNoOfActionPlanInBlueSheet from "@salesforce/apex/TeamController.getNoOfActionPlanInBlueSheet";
+import pubsub from "c/pubSub";
+
+export default class IcCustomInsight extends LightningElement {
+    label = {
+        Insights,
+        Link_to_Document,
+        categoryCompetitor,
+        categoryPerspective
+    };
+    @track insightAlertAllData = [];
+    @track hasInsightAlertCompData = false;
+    @track hasInsightAlertPerspectiveData = false;
+    @track categoryPersp = false;
+    @track displayInsight = false;
+    @track insightAlertCompData = [];
+    @track insightAlertPerspectiveData = [];
+    @api categoryComp;
+    @api showonBs = false;
+    @api
+    get getIdFromParent() {
+        return this._getIdFromParent;
+    }
+
+    set getIdFromParent(value) {
+        this._getIdFromParent = value;
+    }
+
+    @api
+    get showActionInsight() {
+        return this._showActionInsight;
+    }
+
+    set showActionInsight(value) {
+        this._showActionInsight = value;
+    }
+
+    @api
+    get type() {
+        return this._type;
+    }
+
+    set type(value) {
+        this._type = value;
+        if (this.type === this.label.categoryCompetitor) {
+            this.categoryComp = true;
+            this.categoryPersp = false;
+        } else if (this.type === this.label.categoryPerspective) {
+            this.categoryPersp = true;
+            this.categoryComp = false;
+        }
+    }
+
+    connectedCallback() {
+        this.register();
+        if (this.type === this.label.categoryCompetitor || this.type === this.label.categoryPerspective) {
+            //eslint-disable-next-line
+            setTimeout(() => {
+                this.getCustomInsight();
+            }, 5000);
+        }
+    }
+
+    @api
+    handleRefresh() {
+        if (this.type === this.label.categoryCompetitor || this.type === this.label.categoryPerspective) {
+            //eslint-disable-next-line
+            setTimeout(() => {
+                this.getCustomInsight();
+            }, 5000);
+        }
+    }
+
+    register() {
+        if (this.type === this.label.categoryCompetitor) {
+            pubsub.register("refreshCustomInsights", this.handleEvent.bind(this));
+        } else if (this.type === this.label.categoryPerspective) {
+            pubsub.register("refreshPersCustomInsights", this.handleEvent.bind(this));
+        }
+    }
+
+    handleEvent(messageFromEvt) {
+        this.message = messageFromEvt ? JSON.stringify(messageFromEvt, null, "\t") : "no message payload";
+        this.handleRefresh();
+    }
+
+    getCustomInsight() {
+        getNoOfActionPlanInBlueSheet({ bSId: this.getIdFromParent }).then(noOfAP => {
+            fetchInsights({ bSId: this.getIdFromParent }).then(result => {
+                this.insightAlertCompData = [];
+                this.insightAlertPerspectiveData = [];
+                let data = JSON.parse(result);
+                this.insightAlertAllData = data.ruleResults;
+                if (this.insightAlertAllData != null) {
+                    this.insightAlertAllData.forEach(record => {
+                        if (record.category === this.label.categoryCompetitor) {
+                            this.insightAlertCompData.push(record);
+                        }
+                        if (record.category === this.label.categoryPerspective) {
+                            this.insightAlertPerspectiveData.push(record);
+                        }
+                    });
+                }
+                if (this.insightAlertCompData.length > 0) {
+                    this.hasInsightAlertCompData = true;
+                } else {
+                    this.hasInsightAlertCompData = false;
+                }
+                if (this.insightAlertPerspectiveData.length > 0 && noOfAP > 0) {
+                    this.hasInsightAlertPerspectiveData = true;
+                    this.showonBs = true;
+                } else {
+                    this.showonBs = false;
+                }
+            });
+        });
+    }
+}
