@@ -1,0 +1,75 @@
+<!--
+  @description       : 
+  @author            : Astha Swami
+  @group             : 
+  @last modified on  : 02-03-2023
+  @last modified by  : Astha Swami
+-->
+<template>
+    <template if:true={categoryComp}>
+        <template if:true={hasInsightAlertCompData}>
+            <div class="slds-m-top_x-small">
+                <div class="slds-m-left--small slds-m-right--small slds-card_boundary item divInsight">
+                    <div class=" slds-grid slds-m-around_small slds-size_4-of-4 slds-grid_vertical-align-center">
+                        <div style="width:10%" class="slds-text-title_bold ">
+                            <lightning-icon icon-name="utility:light_bulb"
+                                            alternative-text="Connected"
+                                            title="Connected"
+                                            size="x-small">
+                            </lightning-icon>
+                            <span class="textInsightFont">{label.Insights}</span>
+                        </div>
+                        <div style="width:90%" class="slds-border_left slds-m-left_small">
+                            <template for:each={insightAlertCompData} for:item="item">
+                                <div key={item.ruleId} class="slds-m-left_small slds-m-bottom_xx-small">
+                                    <span class="textFont"> {item.text}: </span>
+                                    <template if:true={item.link}>
+                                        <lightning-formatted-url class="slds-text-heading_xx-small"
+                                                                 value={item.link}
+                                                                 target="_blank"
+                                                                 label={item.displayText}>
+                                        </lightning-formatted-url>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </template>
+    <template if:true={categoryPersp}>
+        <template if:true={showonBs}>
+            <div class="slds-m-top_x-small">
+                <div class="slds-m-left--small slds-m-right--small slds-card_boundary item divInsight">
+                    <div class=" slds-grid slds-m-around_small slds-size_4-of-4 slds-grid_vertical-align-center">
+                        <div style="width:11%" class="slds-text-title_bold ">
+                            <lightning-icon icon-name="utility:light_bulb"
+                                            alternative-text="Connected"
+                                            title="Connected"
+                                            size="x-small">
+                            </lightning-icon>
+                            <span class="textInsightFont">{label.Insights}</span>
+                        </div>
+                        <div style="width:90%" class="slds-border_left slds-m-left_small">
+                            <template if:true={hasInsightAlertPerspectiveData}>
+                                <template for:each={insightAlertPerspectiveData} for:item="item">
+                                    <div key={item.ruleId} class="slds-m-left_small slds-m-bottom_xx-small">
+                                        <span class="textFont"> {item.text}: </span>
+                                        <template if:true={item.link}>
+                                            <lightning-formatted-url class="slds-text-heading_xx-small"
+                                                                     value={item.link}
+                                                                     target="_blank"
+                                                                     label={item.displayText}>
+                                            </lightning-formatted-url>
+                                        </template>
+                                    </div>
+                                </template>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </template>
+</template>
